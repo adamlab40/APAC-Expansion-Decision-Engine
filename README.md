@@ -95,12 +95,3 @@ streamlit run src/dashboards/app.py
 ├── tests/            # Unit tests
 └── outputs/          # Generated artifacts
 ```
-
-## How to Talk About This on a Resume
-
-- **Built end-to-end data pipeline**: Designed and implemented a production-grade Python application that automatically ingests real-time economic and governance data from World Bank API and Our World in Data, with intelligent caching to reduce API calls by 90%+
-
-- **Developed multi-criteria decision analysis framework**: Created a weighted scoring model with sensitivity analysis to rank 10 APAC markets across 5 dimensions (market size, purchasing power, digital readiness, governance, corruption risk), enabling data-driven expansion prioritization
-
-- **Delivered executive insights via automated reporting**: Built Monte Carlo simulation engine (3,000 iterations) for revenue forecasting under uncertainty and automated PowerPoint generation using python-pptx, reducing manual analysis time from days to minutes
-
