@@ -1,97 +1,189 @@
-# APAC Expansion Decision Engine
+# APAC Market Expansion Decision Engine
 
-## Problem Statement
+## Overview
 
-A B2B SaaS company is evaluating expansion into 10 APAC markets and needs a data-driven framework to:
-- Rank markets based on market size, purchasing power, digital readiness, governance quality, and corruption risk
-- Simulate revenue scenarios and payback periods under uncertainty
-- Generate actionable expansion recommendations with risk mitigation strategies
+This project is an end-to-end decision support tool designed to evaluate and prioritise market expansion opportunities across the Asia-Pacific (APAC) region.
 
-This decision engine integrates real-world economic and governance data to provide quantitative market prioritization and financial projections for strategic planning.
+The objective is not to produce a single “best” answer, but to support robust, defensible decision-making under uncertainty. The model integrates public economic and governance data, applies structured scoring methodologies, and stress-tests outcomes through sensitivity analysis and simulation.
+
+The output is designed for executive use, combining quantitative rigour with clear, decision-ready insights.
+
+---
+
+## Business Problem
+
+Companies expanding into new international markets face trade-offs between opportunity and risk. Market size, purchasing power, digital readiness, and regulatory quality all matter, but the relative importance of each depends on strategic priorities.
+
+This project addresses the question:
+
+> *Which APAC markets should be prioritised for expansion, and how confident can we be in those recommendations given uncertainty in assumptions and weighting?*
+
+---
+
+## Approach
+
+The project follows a consulting-style analytical workflow:
+
+1. **Data collection**
+   Pulls real, publicly available country-level data from trusted international sources.
+
+2. **Feature engineering**
+   Transforms raw indicators into comparable, standardised metrics across markets.
+
+3. **Multi-criteria decision analysis (MCDA)**
+   Aggregates multiple drivers into a single comparative ranking using configurable weights.
+
+4. **Sensitivity analysis**
+   Tests how rankings change when strategic priorities (weights) are adjusted.
+
+5. **Monte Carlo simulation**
+   Models uncertainty in assumptions to assess the stability of rankings and revenue outcomes.
+
+6. **Executive delivery**
+   Results are presented through an interactive dashboard and a board-style PowerPoint deck.
+
+---
 
 ## Data Sources
 
-### World Bank API V2 (Indicators)
-- **Population (SP.POP.TOTL)**: Total population by country/year
-  - Endpoint: `https://api.worldbank.org/v2/country/{country}/indicator/SP.POP.TOTL`
-- **GDP per Capita (NY.GDP.PCAP.CD)**: GDP per capita in current USD
-  - Endpoint: `https://api.worldbank.org/v2/country/{country}/indicator/NY.GDP.PCAP.CD`
-- **Internet Users % (IT.NET.USER.ZS)**: Percentage of population using internet
-  - Endpoint: `https://api.worldbank.org/v2/country/{country}/indicator/IT.NET.USER.ZS`
+All data is sourced from reputable public datasets:
 
-### Worldwide Governance Indicators (WGI)
-- **Rule of Law (RL.EST)**: Rule of law estimate (-2.5 to +2.5)
-- **Regulatory Quality (RQ.EST)**: Regulatory quality estimate (-2.5 to +2.5)
-- Source: World Bank DataBank (downloaded as CSV with caching)
+* **World Bank API**
 
-### Corruption Perceptions Index (CPI)
-- **CPI Score**: Transparency International CPI score (0-100, higher = less corrupt)
-- Source: Our World in Data via CSV endpoint: `ti-corruption-perception-index`
+  * GDP per capita
+  * Population
+  * Internet users (%)
 
-## Quickstart
+* **Worldwide Governance Indicators (WGI)**
 
-### Installation
+  * Regulatory quality
+  * Rule of law
 
-```bash
-# Create virtual environment (recommended)
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+* **Our World in Data (OWID)**
 
-# Install dependencies
-pip install -r requirements.txt
-```
+  * Corruption Perceptions Index (CPI)
 
-### Run Complete Pipeline
+Downloaded data is cached locally to ensure reproducibility and avoid repeated API calls.
 
-```bash
-# Single command to download data, build features, score markets, run simulations, and generate outputs
-python -m src.main
-```
+---
 
-### Launch Dashboard
+## Key Outputs
 
-```bash
-streamlit run src/dashboards/app.py
-```
+After running the pipeline, the following outputs are generated in the `outputs/` directory:
 
-## Outputs
+* `market_scores.csv`
+  Final market rankings and component scores.
 
-1. **Streamlit Dashboard** (`outputs/dashboard_data.pkl`):
-   - Interactive market ranking table
-   - Radar charts per market
-   - Weight adjustment sliders
-   - Scenario toggles
-   - Sensitivity analysis plots
+* `monte_carlo_results.csv`
+  Full simulation results across scenarios.
 
-2. **PowerPoint Presentation** (`outputs/apac_expansion_recommendations.pptx`):
-   - Executive summary and objectives
-   - Data sources and methodology
-   - Market ranking results
-   - Sensitivity analysis
-   - Recommended market sequencing
-   - 12-month hiring and budget plan
-   - Risk assessment and mitigations
+* `monte_carlo_summary.csv`
+  Summary statistics of simulated outcomes.
 
-3. **Processed Data** (`data/processed/`):
-   - Cleaned and standardized market features
-   - Scoring results
-   - Simulation outputs
+* `payback_distribution.csv`
+  Distribution of estimated payback periods.
+
+* `dashboard_data.pkl`
+  Pre-processed data used by the Streamlit dashboard.
+
+* `apac_expansion_recommendations.pptx`
+  Executive-ready PowerPoint summarising findings and recommendations.
+
+---
+
+## Interactive Dashboard
+
+An interactive Streamlit dashboard allows users to:
+
+* Explore market rankings dynamically
+* Adjust weighting assumptions in real time
+* Compare country profiles across key dimensions
+* Visualise sensitivity and scenario outcomes
+
+This enables stakeholders to understand **why** a market ranks highly, not just **that** it does.
+
+---
 
 ## Project Structure
 
 ```
 .
-├── config/           # YAML configuration files
-├── data/
-│   ├── raw/         # Cached API downloads
-│   └── processed/   # Feature-engineered datasets
 ├── src/
-│   ├── main.py      # Main orchestration script
-│   ├── data_sources/ # API clients and data downloaders
-│   ├── features/     # Feature engineering pipeline
-│   ├── models/       # Scoring, forecasting, simulation
-│   ├── dashboards/   # Streamlit app
-│   └── reporting/    # PowerPoint generator
-├── tests/            # Unit tests
-└── outputs/          # Generated artifacts
+│   ├── data_sources/        # Data ingestion from public APIs
+│   ├── features/            # Feature engineering and standardisation
+│   ├── models/              # Scoring, forecasting, and simulation
+│   ├── dashboards/          # Streamlit dashboard
+│   └── reporting/           # PowerPoint generation
+├── config/                  # Markets, weights, and business assumptions
+├── data/
+│   ├── raw/                 # Cached raw data
+│   └── processed/           # Engineered features
+├── outputs/                 # Final outputs and reports
+├── tests/                   # Unit tests
+├── README.md
+└── requirements.txt
 ```
+
+---
+
+## Quick Start
+
+### Installation
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### Run the Full Pipeline
+
+```bash
+python -m src.main
+```
+
+This will download data, build features, score markets, run simulations, and generate all outputs.
+
+### Launch the Dashboard
+
+```bash
+streamlit run src/dashboards/app.py
+```
+
+---
+
+## Configuration
+
+All key assumptions are configurable:
+
+* `config/markets.yml` – markets included in the analysis
+* `config/weights.yml` – criteria weights and sensitivity ranges
+* `config/assumptions.yml` – business and revenue assumptions
+
+This allows the model to be adapted to different strategic contexts without changing code.
+
+---
+
+## Why Sensitivity Analysis Matters
+
+Single-point rankings can create false confidence. This project explicitly tests how recommendations change when assumptions shift, helping distinguish **robust decisions** from **assumption-driven outcomes**.
+
+This mirrors real consulting practice, where decision quality is judged not just on the answer, but on how resilient it is to uncertainty.
+
+---
+
+## Intended Use
+
+This project was built as a strategy and analytics exercise and is intended for:
+
+* Consulting and strategy roles
+* Market entry and international expansion analysis
+* Decision-making under uncertainty
+* Portfolio prioritisation problems
+
+---
+
+## Author
+
+**Adam Lababidi**
+Electrical Engineering student with a strong interest in strategy, analytics, and data-driven decision-making.
