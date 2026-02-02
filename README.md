@@ -1,13 +1,23 @@
 # APAC Market Expansion Decision Engine
 
+## TL;DR
+End-to-end decision support tool that prioritises APAC expansion markets using public country-level indicators, standardised scoring, and Multi-Criteria Decision Analysis (MCDA) with configurable weights, delivered via an interactive Streamlit dashboard and an executive PowerPoint output.
+
+Base-case Top 5 markets: AUS (0.460), SGP (0.454), JPN (0.272), KOR (0.234), NZL (0.123) (from outputs/market_scores.csv).
+
+Base weights (configurable): Market Size 25%, Purchasing Power 20%, Digital Readiness 20%, Governance Risk 20%, Corruption Risk 15% (from config/weights.yml).
+
+Explainability built-in: component scores are exported per market; for AUS, the strongest positive contributors are Purchasing Power (+0.231), Governance Risk (+0.194), and Digital Readiness (+0.154), offset by Market Size (-0.120) (from outputs/market_scores.csv).
+
+Uncertainty and economics stress-tested: Monte Carlo simulation generates 12-month revenue distributions for the top-ranked market; under the current assumptions the 12-month net revenue is negative on average (mean -$203,686; P10 -$347,955; P90 -$77,555) and payback is not achieved within 12 months (from outputs/monte_carlo_summary.csv and outputs/payback_distribution.csv).
+
+Sensitivity analysis: weight sensitivity is computed in the dashboard using stored sensitivity outputs (outputs/dashboard_data.pkl) to show how top-market recommendations shift under different strategic priorities.
+
 ## Overview
 
-This project is an end-to-end decision support tool designed to evaluate and prioritise market expansion opportunities across the Asia-Pacific (APAC) region.
+This repository contains an end-to-end decision support tool for prioritising market expansion opportunities across the Asia-Pacific (APAC) region. It is designed for situations where expansion decisions involve real trade-offs between opportunity and risk, and where the “right” answer depends on strategic priorities rather than a single metric.
 
-The objective is not to produce a single “best” answer, but to support robust, defensible decision-making under uncertainty. The model integrates public economic and governance data, applies structured scoring methodologies, and stress-tests outcomes through sensitivity analysis and simulation.
-
-The output is designed for executive use, combining quantitative rigour with clear, decision-ready insights.
-
+The tool pulls trusted public economic and governance indicators, transforms them into comparable features, and aggregates them into an overall market ranking using Multi-Criteria Decision Analysis (MCDA) with configurable weights. To avoid false confidence, it pairs base-case rankings with stress-testing: users can explore how recommendations shift under different weighting assumptions through the Streamlit dashboard, and assess 12-month revenue uncertainty for the top-ranked market via Monte Carlo simulation. Outputs are packaged for decision-makers, including ranked score tables, simulation summaries, and an executive-style PowerPoint deck.
 ---
 
 ## Business Problem
