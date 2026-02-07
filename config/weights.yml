@@ -1,0 +1,10 @@
+weights:
+  market_size: 0.25
+  purchasing_power: 0.2
+  digital_readiness: 0.2
+  governance_risk: 0.2
+  corruption_risk: 0.15
+
+sensitivity:
+  step: 0.05
+  runs: 200

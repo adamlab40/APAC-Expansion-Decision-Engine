@@ -1,0 +1,32 @@
+business_assumptions:
+  target_customers_per_market: 500
+  penetration_rate: 0.02
+
+commercial_assumptions:
+  acv_usd: 18000
+  gross_margin: 0.82
+
+funnel:
+  leads_per_month_initial: 120
+  lead_to_opportunity: 0.18
+  opportunity_to_win: 0.22
+  sales_cycle_months: 2
+
+retention:
+  monthly_churn: 0.018
+
+costs:
+  market_entry_cost_usd: 500000
+  cac_usd_per_customer: 14000
+  monthly_operating_cost_usd: 25000
+
+simulation:
+  months: 36
+  n_sims: 3000
+  uncertainty:
+    leads_sd: 20
+    lead_to_opp_sd: 0.02
+    opp_to_win_sd: 0.03
+    acv_sd: 2000
+    churn_sd: 0.006
+    cac_sd: 2500
