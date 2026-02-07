@@ -22,6 +22,20 @@ COUNTRY_NAME_TO_CODE: Dict[str, str] = {
     "Republic of Korea": "KOR",
 }
 
+# Fallback CPI values (2023 data) if download fails
+FALLBACK_CPI: Dict[str, float] = {
+    "AUS": 75.0,  # Australia
+    "NZL": 85.0,  # New Zealand
+    "SGP": 83.0,  # Singapore
+    "JPN": 73.0,  # Japan
+    "KOR": 63.0,  # South Korea
+    "IND": 39.0,  # India
+    "IDN": 34.0,  # Indonesia
+    "MYS": 50.0,  # Malaysia
+    "THA": 36.0,  # Thailand
+    "VNM": 42.0,  # Vietnam
+}
+
 
 class OWIDClient:
     """Client for downloading OWID CSV datasets."""
@@ -81,8 +95,8 @@ class OWIDClient:
             df = None
         
         if df is None:
-            # Try direct CSV URL
-            url = f"{self.BASE_URL}/{dataset_name}/{dataset_name}.csv"
+            # Try OWID grapher CSV export (more reliable endpoint)
+            url = "https://ourworldindata.org/grapher/corruption-perception-index.csv"
             
             try:
                 response = self.session.get(url, timeout=30)
@@ -94,17 +108,36 @@ class OWIDClient:
                 self._save_to_cache(cache_path, df)
                 
             except Exception as e:
-                print(f"Error fetching CPI from {url}: {e}")
-                # Fallback: use alternative endpoint
+                print(f"Error fetching CPI from grapher CSV: {e}")
+                # Fallback: try GitHub raw URL
                 try:
-                    # Alternative: Our World in Data explorer export
-                    alt_url = "https://ourworldindata.org/grapher/corruption-perception-index"
-                    print(f"Trying alternative method...")
-                    # For now, return empty with structure
-                    df = pd.DataFrame(columns=["Entity", "Code", "Year", "Corruption Perceptions Index"])
+                    alt_url = f"{self.BASE_URL}/{dataset_name}/{dataset_name}.csv"
+                    print(f"Trying GitHub raw URL: {alt_url}")
+                    response = self.session.get(alt_url, timeout=30)
+                    response.raise_for_status()
+                    from io import StringIO
+                    df = pd.read_csv(StringIO(response.text))
+                    self._save_to_cache(cache_path, df)
                 except Exception as e2:
                     print(f"Fallback also failed: {e2}")
-                    return pd.DataFrame()
+                    print("Using fallback CPI values from known data")
+                    # Use fallback CPI values
+                    if country_codes:
+                        fallback_data = {
+                            "country_code": [],
+                            "cpi_score": []
+                        }
+                        for code in country_codes:
+                            if code in FALLBACK_CPI:
+                                fallback_data["country_code"].append(code)
+                                fallback_data["cpi_score"].append(FALLBACK_CPI[code])
+                        return pd.DataFrame(fallback_data)
+                    else:
+                        # Return all fallback values
+                        return pd.DataFrame({
+                            "country_code": list(FALLBACK_CPI.keys()),
+                            "cpi_score": list(FALLBACK_CPI.values())
+                        })
         
         # Standardize column names
         df.columns = df.columns.str.strip()
@@ -112,18 +145,27 @@ class OWIDClient:
         # Find CPI column (might be named differently)
         cpi_col = None
         for col in df.columns:
-            if "corruption" in col.lower() or "cpi" in col.lower():
+            col_lower = col.lower()
+            if ("corruption" in col_lower or "cpi" in col_lower) and col_lower not in ["code", "entity", "year"]:
                 cpi_col = col
                 break
         
-        if cpi_col is None and "Value" in df.columns:
+        if cpi_col is None and "Corruption Perceptions Index" in df.columns:
+            cpi_col = "Corruption Perceptions Index"
+        elif cpi_col is None and "Value" in df.columns:
             cpi_col = "Value"
-        elif cpi_col is None and len(df.columns) > 3:
-            cpi_col = df.columns[-1]  # Assume last numeric column
+        elif cpi_col is None:
+            # Find first numeric column that's not Code, Entity, or Year
+            exclude_cols = {"Code", "Entity", "Year", "code", "entity", "year"}
+            for col in df.columns:
+                if col not in exclude_cols and pd.api.types.is_numeric_dtype(df[col]):
+                    cpi_col = col
+                    break
         
         if cpi_col is None:
             print("Warning: Could not identify CPI column")
-            return pd.DataFrame()
+            print(f"Available columns: {list(df.columns)}")
+            return pd.DataFrame(columns=["country_code", "cpi_score"])
         
         # Filter to latest year and specified countries
         if "Year" in df.columns:
@@ -146,17 +188,49 @@ class OWIDClient:
             result = result[result["country_code"].notna()].copy()
         else:
             print("Warning: No country code or entity column found")
-            return pd.DataFrame()
+            print(f"Available columns: {list(df.columns)}")
+            return pd.DataFrame(columns=["country_code", "cpi_score"])
         
         if cpi_col in df.columns:
             result["cpi_score"] = pd.to_numeric(df[cpi_col], errors="coerce")
         else:
             print("Warning: CPI score column not found")
-            return pd.DataFrame()
+            print(f"CPI column searched: {cpi_col}, Available columns: {list(df.columns)}")
+            return pd.DataFrame(columns=["country_code", "cpi_score"])
         
         # Filter to requested countries if specified
         if country_codes:
             result = result[result["country_code"].isin(country_codes)].copy()
+        
+        # If result is empty and we have country codes, use fallback
+        if len(result) == 0 and country_codes:
+            print("CPI download returned no data, using fallback values")
+            fallback_data = {
+                "country_code": [],
+                "cpi_score": []
+            }
+            for code in country_codes:
+                if code in FALLBACK_CPI:
+                    fallback_data["country_code"].append(code)
+                    fallback_data["cpi_score"].append(FALLBACK_CPI[code])
+            if fallback_data["country_code"]:
+                result = pd.DataFrame(fallback_data)
+        
+        # Debug output
+        if len(result) > 0:
+            print(f"CPI data loaded: {len(result)} countries, latest year: {df['Year'].max() if 'Year' in df.columns and len(df) > 0 else 'N/A'}")
+            if country_codes and len(result) < len(country_codes):
+                missing = set(country_codes) - set(result["country_code"].unique())
+                if missing:
+                    print(f"Warning: CPI missing for countries: {missing}")
+                    # Fill missing with fallback if available
+                    for code in missing:
+                        if code in FALLBACK_CPI:
+                            result = pd.concat([
+                                result,
+                                pd.DataFrame({"country_code": [code], "cpi_score": [FALLBACK_CPI[code]]})
+                            ], ignore_index=True)
+                            print(f"  Using fallback CPI for {code}: {FALLBACK_CPI[code]}")
         
         return result.reset_index(drop=True)
 
