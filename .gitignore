@@ -1,0 +1,17 @@
+
+# macOS
+.DS_Store
+
+# Python build artifacts
+*.egg-info/
+dist/
+build/
+__pycache__/
+*.pyc
+
+# Local data + outputs (generated)
+data/
+outputs/
+
+# Virtual env (if it exists inside repo)
+.venv/
