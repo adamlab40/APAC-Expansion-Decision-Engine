@@ -22,11 +22,25 @@ The tool pulls trusted public economic and governance indicators, transforms the
 
 ## Screenshots
 
-*Add screenshots in `docs/images/` and link them here once available.*
+### Dashboard: Market Ranking
+![Market Ranking](docs/images/dashboard-market-ranking.png)
+*Interactive market ranking table with component scores and horizontal bar chart visualization.*
 
-* Dashboard: market rankings + weight controls
-* Sensitivity: ranking stability under weight changes
-* Executive deck preview (1–2 slides)
+### Dashboard: Market Profiles
+![Market Profiles](docs/images/dashboard-market-profiles.png)
+*Radar chart visualization showing market profile across five criteria (Purchasing Power, Market Size, Corruption, Governance, Digital Readiness) with key metrics.*
+
+### Dashboard: Revenue Forecast
+![Revenue Forecast](docs/images/dashboard-forecast.png)
+*Revenue forecasting with cumulative net revenue over 36 months, showing payback analysis and key metrics (Active Customers, Cumulative Revenue, Payback Status).*
+
+### Dashboard: Sensitivity Analysis
+![Sensitivity Analysis](docs/images/dashboard-sensitivity.png)
+*Sensitivity analysis showing how market rankings change when adjusting criterion weights, with rank stability summary table and interactive line chart.*
+
+### Executive Deck: Objective Slide
+![PowerPoint Objective](docs/images/powerpoint-objective.png)
+*Executive PowerPoint slide outlining the objective and methodology for APAC market expansion analysis.*
 
 ---
 
