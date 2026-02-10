@@ -12,6 +12,29 @@ End-to-end decision support tool that prioritises APAC expansion markets using p
 
 ---
 
+## Case Study (Project 2): FrankieOne — Singapore GTM + Unit Economics
+
+This repository includes a consulting-style case study that converts the market prioritisation engine into an executable market entry recommendation for a real APAC SaaS company.
+
+**Client (case study):** FrankieOne (identity, fraud, and compliance orchestration)  
+**Home market:** Australia  
+**Recommended first non-home market:** Singapore
+
+### Executive Deliverables
+- **GTM Strategy Deck (PDF):** `docs/frankieone-singapore-gtm.pdf`
+- **Executive Memo (PDF):** `docs/frankieone_singapore_executive_memo.pdf`
+- **Unit Economics Model (XLSX):** `docs/frankieone_singapore_unit_economics.xlsx`
+
+### What the case study covers
+- Market choice grounded in the engine’s MCDA ranking and sensitivity results  
+- ICP definition (regulated fintech/payments/digital banking) and compliance-led GTM motion  
+- Unit economics at a fixed **$18,000 ACV** with CAC, churn, margin, and payback thresholds  
+- 12-month execution plan with measurable KPIs
+
+> Note: This is a hypothetical case study built for portfolio purposes and is not affiliated with FrankieOne.
+
+---
+
 ## Overview
 
 This repository contains an end-to-end decision support tool for prioritising market expansion opportunities across the Asia-Pacific (APAC) region. It is built for decisions where there is no single “right” answer, only trade-offs: opportunity vs. risk, growth vs. feasibility, and speed vs. certainty.
