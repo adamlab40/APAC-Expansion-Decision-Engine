@@ -21,9 +21,9 @@ This repository includes a consulting-style case study that converts the market 
 **Recommended first non-home market:** Singapore
 
 ### Executive Deliverables
-- **GTM Strategy Deck (PDF):** `docs/frankieone-singapore-gtm.pdf`
-- **Executive Memo (PDF):** `docs/frankieone_singapore_executive_memo.pdf`
-- **Unit Economics Model (XLSX):** `docs/frankieone_singapore_unit_economics.xlsx`
+- **GTM Strategy Deck (PDF):** `FrankieOne_Singapore_GTM_Deck_SG.pdf`
+- **Executive Memo (PDF):** `FrankieOne-Singapore-gtm.pdf`
+- **Unit Economics Model (XLSX):** `frankieone_singapore_unit_economics.xlsx`
 
 ### What the case study covers
 - Market choice grounded in the engine’s MCDA ranking and sensitivity results  
