@@ -2,13 +2,17 @@
 
 ## TL;DR
 
-End-to-end decision support tool that prioritises APAC expansion markets using public country-level indicators, standardised scoring, and Multi-Criteria Decision Analysis (MCDA) with configurable weights, delivered via an interactive Streamlit dashboard and an executive PowerPoint output.
+End-to-end decision support tool for APAC market entry that ranks expansion markets using public country-level indicators, standardised scoring, and Multi-Criteria Decision Analysis (MCDA) with configurable weights. Delivered via an interactive Streamlit dashboard plus exportable executive outputs (rank tables, sensitivity artefacts, and a slide deck).
 
-* **Base-case Top 5 markets:** AUS (0.460), SGP (0.454), JPN (0.272), KOR (0.234), NZL (0.123) (from `outputs/market_scores.csv`).
-* **Base weights (configurable):** Market Size 25%, Purchasing Power 20%, Digital Readiness 20%, Governance Risk 20%, Corruption Risk 15% (from `config/weights.yml`).
-* **Explainability built-in:** component scores are exported per market; for AUS, the strongest positive contributors are Purchasing Power (+0.231), Governance Risk (+0.194), and Digital Readiness (+0.154), offset by Market Size (-0.120) (from `outputs/market_scores.csv`).
-* **Uncertainty and economics stress-tested:** Monte Carlo simulation generates 12-month revenue distributions for the top-ranked market; under current assumptions the 12-month net revenue is negative on average (mean -$203,686; P10 -$347,955; P90 -$77,555) and payback is not achieved within 12 months (from `outputs/monte_carlo_summary.csv` and `outputs/payback_distribution.csv`).
-* **Sensitivity analysis:** weight sensitivity is computed in the dashboard using stored sensitivity outputs (`outputs/dashboard_data.pkl`) to show how top-market recommendations shift under different strategic priorities.
+Base-case Top 5 markets: AUS (0.460), SGP (0.454), JPN (0.272), KOR (0.234), NZL (0.123) (outputs/market_scores.csv)
+
+Configurable weights (base): Market Size 25%, Purchasing Power 20%, Digital Readiness 20%, Governance Risk 20%, Corruption Risk 15% (config/weights.yml)
+
+Driver transparency: component scores are exported per market; for AUS the largest positive contributors are Purchasing Power (+0.231), Governance Risk (+0.194), and Digital Readiness (+0.154), partially offset by Market Size (-0.120) (outputs/market_scores.csv)
+
+Economics stress test: Monte Carlo simulation produces outcome distributions for the selected market under stated assumptions; under the current base assumptions, 12-month net revenue is negative on average and payback is not achieved within 12 months (outputs/monte_carlo_summary.csv, outputs/payback_distribution.csv)
+
+Sensitivity / robustness: rankings are stress-tested in the dashboard using stored sensitivity artefacts (outputs/dashboard_data.pkl) to show when recommendations change as strategic priorities (weights) shift
 
 ---
 
